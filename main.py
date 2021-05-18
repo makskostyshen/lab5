@@ -78,13 +78,12 @@ def sett_read(path: str) -> dict:
         return param
 
 
-def _row_check(row: str, pattern: list) -> list:
+def _row_check(row: str, pattern: list) -> None:
     """
     Check the correspondence between the row and the pattern.
     """
 
     limit = len(row)
-    #print(row)
     for i in range(limit):
         re.fullmatch(pattern[i], row[i]).group()
 
@@ -103,30 +102,30 @@ def row_info_check(row: list) -> None:
     Check the accuracy of information row.
     """
 
-    week_pat = re.compile(r"[0-1][0-8]|[0-9]")  # тут питаннячко щодо коомпіляції і навіщо вона треба тут саме
-    audi_pat = re.compile(r"\d+")               # типу функція буде викликатись багато разів.
+    week_pat = re.compile(r"([1][0-8])|[0-9]")  # тут питаннячко щодо коомпіляції і навіщо вона треба тут саме
+    auditory_pat = re.compile(r"\d+")               # типу функція буде викликатись багато разів.
     day_pat = re.compile(r"[0-5]")              # Кожен раз буде наново компілюватись?
     pair_course_pat = re.compile(r"[0-4]")
     type_pat = re.compile(r"Lecture|практ.|8|Лаб.")
-    subj_pat = re.compile(r"\S[\d 'a-zA-Zа-яА-Я-]{4,22}\S")
+    subject_pat = re.compile(r"\S[\d 'a-zA-Zа-яА-Я-]{4,22}\S")
     group_pat = re.compile(r"\S[\da-zA-Zа-яА-Я-]{,2}\S")
     names_pat = re.compile(r"\S[a-zA-Zа-яА-Я-]{4,18}\S")
 
-    info = [subj_pat, names_pat, day_pat, pair_course_pat, audi_pat,
+    info = [subject_pat, names_pat, day_pat, pair_course_pat, auditory_pat,
                 type_pat, week_pat, pair_course_pat, group_pat, names_pat]
 
     _row_check(row, info)
 
 
 
-def csv_read(path: str, encod: str) -> Information:
+def csv_read(path: str, encoding: str) -> Information:
     """
     Open, read and analyse the file with main information.
     Return it structured
 
     input:
         path - path to the file
-        encod - file's encoding
+        encoding - file's encoding
     output:
         infor - object with the main information got structured
     """
@@ -134,8 +133,9 @@ def csv_read(path: str, encod: str) -> Information:
     name = _pathname(path)
     print(f"input-csv {name} : ", end="")
 
-    with open (path, "r", encoding=encod) as f:
-        r = csv.reader(f)
+    with open (path, "r", encoding=encoding) as file:
+        r = csv.reader(file)
+        print(f"type ==== {type(r)}")
         row_index = 0
         for row in r:
             if(row_index):
@@ -153,13 +153,13 @@ def _check_json(param: dict) -> None:
     p2 = param["кількість записів у файлі"]
 
 
-def json_read(path: str, encod: str) -> dict:
+def json_read(path: str, encoding: str) -> dict:
     """
     Open, read and analyse the file with additional information.
 
     input:
         path - path to the file
-        encod - file's encoding
+        encoding - file's encoding
     output:
         param - additional file's capacity
     """
@@ -167,7 +167,7 @@ def json_read(path: str, encod: str) -> dict:
     name = _pathname(path)
     print(f"input-json {name} : ", end="")
 
-    with open (path, "r", encoding=encod) as f:
+    with open (path, "r", encoding=encoding) as f:
         param = json.load(f)
         _check_json(param)
         print("OK")
@@ -183,10 +183,25 @@ pr_exec()
 pr_cond()
 print("*****")
 
+
+
+
+def load(csv_file, json_file, encoding) -> Information:
+    print("ok")
+    # load csv
+    # load json
+    # check
+
+def process(sett_file): pass
+    #d
+
+
+
+
 path = cmd_read()
 
-
 try:
+
     param = sett_read(path)
     csv_read(param["input"]["csv"], param["input"]["encoding"])
     json_read(param["input"]["json"], param["input"]["encoding"])

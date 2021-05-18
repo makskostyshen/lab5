@@ -4,7 +4,7 @@ from Student import Student
 
 class Information:
 
-    def __init__(self, subj, sname, day, pair, audi,
+    def __init__(self, subject, sname, day, pair, auditory,
                 type, week, course, group, name):
         self._students = []
         self._max_auditory = 0
@@ -23,6 +23,10 @@ class Information:
         self._max_auditory = 0
         self._total_skips = 0
 
+
+    def output(self): pass
+
+
     def add_student(self, sname, name, course, group):
         new = Student(sname, name, course, group)
         self._students.append(new)
@@ -40,7 +44,7 @@ class Information:
         return equal
 
         
-    def load_skip(self, subj, sname, day, pair, audi,
+    def load_skip(self, subject, sname, day, pair, auditory,
             type, week, course, group, name):
 
         if (founded:=self.find(sname, name)):
@@ -48,22 +52,21 @@ class Information:
         else:
             student = self.add_student(sname, name, course, group)
 
-        skip = student.load_skip(subj, day, pair, audi, type, week)
+        skip = student.load_skip(subject, day, pair, auditory, type, week)
         print(f"{self}")
         return skip
 
     def summing(self, skip):
         self._total_skips+=1
-        if((checking:=skip.audi) > self.max_auditory):
+        if((checking:=skip.auditory) > self.max_auditory):
             self._max_auditory = checking
 
 
-    def load_data(self, subj, sname, day, pair, audi,
+    def load_data(self, subject, sname, day, pair, auditory,
             type, week, course, group, name):
-        skip = self.load_skip(subj, sname, day, pair, audi,
+        skip = self.load_skip(subject, sname, day, pair, auditory,
             type, week, course, group, name)
         self.summing(skip)
-
 
 
     def __str__(self):

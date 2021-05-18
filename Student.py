@@ -36,17 +36,21 @@ class Student:
     def lecture_skips(self):
         return self._lecture_skips
 
-    def add_skip(self, subj, day, pair, audi, type, week):
+    @staticmethod
+    def lecture_name():
+        return "Lecture"
 
-        new = Skips(subj, day, pair, audi, type, week)
+    def add_skip(self, subject, day, pair, auditory, type, week):
+
+        new = Skips(subject, day, pair, auditory, type, week)
         self._skips.append(new)
         return new
 
-    def load_skip(self, subj, day, pair, audi, type, week):
+    def load_skip(self, subject, day, pair, auditory, type, week):
         self._total_skips+=1
-        if(type == "Lecture"):
+        if(type == Student.lecture_name):
             self._lecture_skips+=1
-        skip = self.add_skip(subj, day, pair, audi, type, week)
+        skip = self.add_skip(subject, day, pair, auditory, type, week)
         return skip
 
     def __eq__(self, other):

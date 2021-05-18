@@ -3,17 +3,17 @@
 
 
 class Skips:
-    def __init__(self, subj, day, pair, audi, type, week):
-        self._subj = subj
+    def __init__(self, subject, day, pair, auditory, type, week):
+        self._subject = subject
         self._type = type
         self._week = week
         self._day = day
         self._pair = int(pair)
-        self._audi = int(audi)
+        self._auditory = int(auditory) # need a change
 
     @property
-    def subj(self):
-        return self._subj
+    def subject(self):
+        return self._subject
 
     @property
     def type(self):
@@ -32,8 +32,8 @@ class Skips:
         return self._pair
 
     @property
-    def audi(self):
-        return self._audi
+    def auditory(self):
+        return self._auditory
 
     def __repr__(self): #shob bulo
-        return f"[{self._subj}, {self._type}, {self._week}, {self._day}, {self._pair}, {self._audi}]"
+        return f"[{self._subject}, {self._type}, {self._week}, {self._day}, {self._pair}, {self._auditory}]"
