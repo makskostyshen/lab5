@@ -62,7 +62,7 @@ def process(sett_file: str) -> None:
     """
 
     parameters = sett_read(sett_file)
-    print(parameters)
+
 
     load(parameters['input']['csv'], parameters['input']['json'],  parameters['input']['encoding'])
 
