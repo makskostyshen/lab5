@@ -5,7 +5,7 @@ from Information import Information
 
 class Builder:
 
-    _int_pattern = re.compile("[\d]*")
+    _int_pattern = re.compile("[\d]+")
 
 
     def __init__(self, csv_object: csv.reader):
@@ -39,8 +39,8 @@ class Builder:
     def row_proceed(self, row):
 
 
-        if (len(row) != self.fields_number):
-            #raise Exception
+        if (len(row) != self.fields_number()):
+            raise Exception
             #                                        !!!!!!!!!!!!!!!!!!!!!!
             print("ok")
         keys = ["subject", "sname", "day", "pair", "auditory", "type", "week", "course", "group", "name"]
