@@ -28,7 +28,7 @@ class Builder:
         Upload the row
 
         input:
-            holder - where to input
+            holder - where to upload
         """
 
         for row in self._object:

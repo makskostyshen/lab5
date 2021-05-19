@@ -17,6 +17,7 @@ def pr_exec() -> None:
     print("Kostyshen Maksym, K12")
     print("80 variant")
 
+
 def pr_cond() -> None:
     """
     Output information about conditions of a task.
@@ -35,24 +36,37 @@ def cmd_read() -> str:
     if (len(argv) != 2):
         sys.exit("***** program aborted *****")
     path = argv[1]
+
     return path
 
 
-def process(sett_file: str) -> Information:
+def main():
+    pr_exec()
+    pr_cond()
+    print("*****")
+
+    sett_file = cmd_read()
+
+    try:
+        process(sett_file)
+    except Exception as e:
+        print("UPS", "***** program aborted *****", e, sep="\n")
+
+
+def process(sett_file: str) -> None:
     """
     Read file with settings and process data
 
     input:
         sett_file - path to the file with settings
-
-    output:
-        Ya ne znaiu!!!!
     """
+
     parameters = sett_read(sett_file)
-    print("ok")
+
+    load("infor.csv", "infor.json", "utf-8")
 
 
-def load(csv_file, json_file, encoding) -> Information:
+def load(csv_file, json_file, encoding) -> None:
     """
     Upload input data
 
@@ -60,18 +74,19 @@ def load(csv_file, json_file, encoding) -> Information:
         csv_file - path to the main file
         json_file - path to the additional file
 
-    output:
-        hzzzz
     """
     holder = Information()
 
     load_data(csv_file, holder, encoding)
     settings = load_sett(json_file, encoding)
-    fit(holder, settings)
+    sign = fit(holder, settings)
+
+    if not sign:
+        raise Exception
 
 
 
-def load_data(csv_file, holder, encoding) -> Information:
+def load_data(csv_file, holder, encoding) -> None:
     """
     Upload information from the main file
 
@@ -79,12 +94,10 @@ def load_data(csv_file, holder, encoding) -> Information:
         holder: object to upload information into
         csv_file - path to the main file
 
-    output:
-        holder - object with uploaded information
     """
 
     name = _pathname(csv_file)
-    print(f"input-csv {name} : ", end="")
+    print(f"input-csv {name}: ", end="")
 
     holder.clear()
 
@@ -110,7 +123,7 @@ def load_sett(sett_file: str, encoding: str) -> dict:
     """
 
     name = _pathname(sett_file)
-    print(f"input-json {name} : ", end="")
+    print(f"input-json {name}: ", end="")
 
     with open (sett_file, "r", encoding=encoding) as f:
         parameters = json.load(f)
@@ -145,7 +158,7 @@ def sett_read(sett_file: str) -> dict:
     name = _pathname(sett_file)
     print(f"ini {name} : ", end="")
 
-    with open(path, "r") as f:
+    with open(sett_file, "r") as f:
         param = json.load(f)
         _check_sett(param)
         print("OK")
@@ -185,19 +198,17 @@ def fit(holder: Information, settings: dict) -> bool:
         output:
             sign of the correspondence between files
     """
-    #print(holder.max_auditory)
-    #print(holder.total_skips)
+    print("json?=csv: ", end="")
     if holder.max_auditory == settings["max_auditory"] and holder.total_skips == settings["total_skips"]:
+        print("OK")
         return True
 
     else: return False
 
 
-i = Information()
+main()
 
 
-#load_data("infor.csv", i, "utf-8")
-#settings = load_stat("infor.json", "utf-8")
-#print(fit(i, settings))
 
-load("infor.csv", "infor.json", "utf-8")
+
+

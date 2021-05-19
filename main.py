@@ -207,3 +207,4 @@ try:
     json_read(param["input"]["json"], param["input"]["encoding"])
 except BaseException as e:
     print("UPS", "***** program aborted *****", e, sep="\n")
+

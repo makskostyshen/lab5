@@ -16,8 +16,8 @@ class Skips:
         self._type = type
         self._week = week
         self._day = day
-        self._pair = int(pair)
-        self._auditory = int(auditory) # need a change
+        self._pair = pair
+        self._auditory = auditory
 
     @property
     def subject(self):
