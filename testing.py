@@ -3,12 +3,12 @@ import json
 import csv
 import re
 
+p = re.compile(r"\S[\da-zA-Zа-яА-Я-`]{,2}\S")
 #C:\Users\maxxx\Documents\GitHub\lab5\task0.ini
 
-#c = r"([1][0-8])|[0-9]"
-#d = 17
-#print(re.fullmatch(c, d).group())
 
-a = 3
-b = 4
-print(isinstance([3, 4], int))
+print(re.fullmatch(p, "a-4").group())
+
+
+a = 1 < 3 < 4
+print(a)

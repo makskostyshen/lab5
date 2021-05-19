@@ -5,7 +5,7 @@ import sys
 import csv
 import json
 import re
-from Class import Information
+from Information import Information
 
 
 def pr_exec() -> None:
@@ -107,9 +107,9 @@ def row_info_check(row: list) -> None:
     day_pat = re.compile(r"[0-5]")              # Кожен раз буде наново компілюватись?
     pair_course_pat = re.compile(r"[0-4]")
     type_pat = re.compile(r"Lecture|практ.|8|Лаб.")
-    subject_pat = re.compile(r"\S[\d 'a-zA-Zа-яА-Я-]{4,22}\S")
-    group_pat = re.compile(r"\S[\da-zA-Zа-яА-Я-]{,2}\S")
-    names_pat = re.compile(r"\S[a-zA-Zа-яА-Я-]{4,18}\S")
+    subject_pat = re.compile(r"\S[\d 'a-zA-Zа-яА-Я-`]{4,22}\S")
+    group_pat = re.compile(r"\S[\da-zA-Zа-яА-Я-`]{,2}\S")
+    names_pat = re.compile(r"\S[a-zA-Zа-яА-Я-`]{4,18}\S")
 
     info = [subject_pat, names_pat, day_pat, pair_course_pat, auditory_pat,
                 type_pat, week_pat, pair_course_pat, group_pat, names_pat]

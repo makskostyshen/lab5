@@ -1,9 +1,20 @@
 """created by Kostyshen Maksym"""
 
 from Skips import Skips
+import re
 
 class Student:
+
+    _names_pattern = re.compile(r"\S[a-zA-Zа-яА-Я-`]{4,18}\S")
+    _group_pattern = re.compile(r"\S[\da-zA-Zа-яА-Я-`]{,2}\S")
+    _course_limit = 4
+    _low_limit = 1
+
+
     def __init__(self, sname, name, course=None, group=None):
+        if (course and group):
+            self._check_data(sname, name, course, group)
+
         self._sname = sname
         self._name = name
         self._course = course
@@ -40,6 +51,20 @@ class Student:
     def lecture_name():
         return "Lecture"
 
+
+    def _check_data(self, sname, name, course, group):
+
+        cond1 = re.fullmatch(self._names_pattern, sname)
+        cond2 = re.fullmatch(self._names_pattern, name)
+        cond3 = re.fullmatch(self._group_pattern, group)
+        cond4 = self._low_limit <= course <= self._course_limit
+
+
+        if not (cond1 and cond2 and cond3 and cond4):
+            raise Exception
+
+
+
     def add_skip(self, subject, day, pair, auditory, type, week):
 
         new = Skips(subject, day, pair, auditory, type, week)
@@ -57,15 +82,15 @@ class Student:
         return ((other.sname == self.sname) & (other.name == self.name))
 
     def __repr__(self):
-        return f"({self.sname}, {self._skips}, lec={self._lecture_skips}, total={self._total_skips})"
+        return f"({self.sname}, {self._skips})"
         #prosto shcob bachyty
     def __str__(self):
         return f"({self.sname}, {self._skips}, lec={self._lecture_skips}, total={self._total_skips})"
 
 
-lis = ["ssmaks", "maks", "1", "krovi"]
+#lis = ["ssmaks", "maks", "1", "krovi"]
 
-s = Student(*lis)
+#s = Student(*lis)
 
 
 

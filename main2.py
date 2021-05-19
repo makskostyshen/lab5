@@ -5,7 +5,8 @@ import sys
 import csv
 import json
 import re
-from Class import Information
+from Information import Information
+from Builder import Builder
 
 
 def pr_exec() -> None:
@@ -40,8 +41,10 @@ def cmd_read() -> str:
 def process(sett_file: str) -> Information:
     """
     Read file with settings and process data
+
     input:
         sett_file - path to the file with settings
+
     output:
         Ya ne znaiu!!!!
     """
@@ -52,34 +55,50 @@ def process(sett_file: str) -> Information:
 def load(csv_file, json_file, encoding) -> Information:
     """
     Upload input data
+
     input:
         csv_file - path to the main file
         json_file - path to the additional file
+
     output:
         hzzzz
     """
-    Inform = Information()
-    print("ok")
-    # load csv
-    # load json
-    # check
+    holder = Information()
 
-def load_data(csv_file, information, encoding) -> Information:
+    load_data(csv_file, holder, encoding)
+    settings = load_sett(json_file, encoding)
+    fit(holder, settings)
+
+
+
+def load_data(csv_file, holder, encoding) -> Information:
     """
     Upload information from the main file
+
     input:
-        information: object to upload infomation into
+        holder: object to upload information into
         csv_file - path to the main file
+
     output:
-        hzzzz
+        holder - object with uploaded information
     """
-    print("ok")
-    # load csv
-    # load json
-    # check
+
+    name = _pathname(csv_file)
+    print(f"input-csv {name} : ", end="")
+
+    holder.clear()
+
+    with open(csv_file, encoding=encoding) as opened_file:
+        csv_format = csv.reader(opened_file)
+        builder = Builder(csv_format)
+        builder.load_data(holder)
+
+    print("OK")
 
 
-def load_stat(sett_file: str, encoding: str) -> dict:
+
+
+def load_sett(sett_file: str, encoding: str) -> dict:
     """
     Upload information from the additional file
 
@@ -90,10 +109,10 @@ def load_stat(sett_file: str, encoding: str) -> dict:
         parameters - additional file's capacity
     """
 
-    name = _pathname(path)
+    name = _pathname(sett_file)
     print(f"input-json {name} : ", end="")
 
-    with open (path, "r", encoding=encoding) as f:
+    with open (sett_file, "r", encoding=encoding) as f:
         parameters = json.load(f)
         dictionary = check_sett(parameters)
         print("OK")
@@ -105,10 +124,11 @@ def check_sett(param: dict) -> dict:
     Check existent keys from the additional file
     and return a changed dictionary
     """
+
     p1 = param["найбільший номер аудиторії"]
     p2 = param["кількість записів у файлі"]
 
-    dictionary = {"max_auditory": p1, "rows_number": p2}
+    dictionary = {"max_auditory": p1, "total_skips": p2}
     return dictionary
 
 
@@ -142,10 +162,42 @@ def _pathname(path: str) -> str:
     return name
 
 
-def fit(information: Information, settings: dict) -> bool:
+def _check_sett(param: dict) -> None:
+    """
+    Check existent keys from the settings' file.
+    """
+
+    p1 = param["input"]["csv"]
+    p2 = param["input"]["json"]
+    p3 = param["input"]["encoding"]
+    p4 = param["output"]["fname"]
+    p5 = param["output"]["encoding"]
+
+
+def fit(holder: Information, settings: dict) -> bool:
     """
     Check the correspondence between main file and additional file
-    :param information:
-    :param settings:
-    :return:
+
+        input:
+            holder - object with data from the main file
+            settings - object with data from the additional file
+
+        output:
+            sign of the correspondence between files
     """
+    #print(holder.max_auditory)
+    #print(holder.total_skips)
+    if holder.max_auditory == settings["max_auditory"] and holder.total_skips == settings["total_skips"]:
+        return True
+
+    else: return False
+
+
+i = Information()
+
+
+#load_data("infor.csv", i, "utf-8")
+#settings = load_stat("infor.json", "utf-8")
+#print(fit(i, settings))
+
+load("infor.csv", "infor.json", "utf-8")

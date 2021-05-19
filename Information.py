@@ -4,8 +4,7 @@ from Student import Student
 
 class Information:
 
-    def __init__(self, subject, sname, day, pair, auditory,
-                type, week, course, group, name):
+    def __init__(self):
         self._students = []
         self._max_auditory = 0
         self._total_skips = 0
@@ -24,7 +23,31 @@ class Information:
         self._total_skips = 0
 
 
-    def output(self): pass
+    def output(self, output_file, encoding) -> None:
+        """
+        Output information from object with data to file
+
+        input:
+
+            output_file - file to output into
+            encoding - file's encoding
+        """
+
+        with open(output_file, "w", encoding=encoding) as output_path:
+            self._output(output_path)
+
+    def _prekol(self):
+        for stud in self._students:
+
+            stud._skips.sort(key=lambda sorting: ("Lecture", "практ.", "8", "Лаб."))
+
+        for stud in self._students:
+            print(stud)
+
+    #def _output(self, output_path):
+    #    self._students.sort(key=lambda sorting: ())
+
+
 
 
     def add_student(self, sname, name, course, group):
@@ -53,7 +76,7 @@ class Information:
             student = self.add_student(sname, name, course, group)
 
         skip = student.load_skip(subject, day, pair, auditory, type, week)
-        print(f"{self}")
+        #print(f"{self}")
         return skip
 
     def summing(self, skip):
@@ -67,6 +90,7 @@ class Information:
         skip = self.load_skip(subject, sname, day, pair, auditory,
             type, week, course, group, name)
         self.summing(skip)
+        self._prekol()
 
 
     def __str__(self):
@@ -77,24 +101,3 @@ class Information:
 
 
 
-studlist = ["subject", "surname", "day", "pair", "kind", "auditory", "week", "course", "group", "name"]
-s1 = ["algebr","Kostyshen","1","4","2","Lecture","1","1","a-4","Maksim"]
-s2 = ["algebr","Kostyshena","1","4","1","Lecture","1","1","a-4","Maksim"]
-s3 = ["algeb","Kostyshen","1","4","4","Lecture","1","1","a-4","Maksim"]
-s4 = ["algeb","Kostyshen","1","4","7","Lecture","1","1","a-4","Maksim"]
-c = Information(*studlist)
-
-#c.add("Kostyshen", "maks", "12", "32")
-#c.add("Kostyshena", "maks", "12", "32")
-#c.add("Kostyshen", "maks", "23", "45")
-#c.add("Kos", "maks", "23", "45")
-#c.add("Kostysheno", "maks", "23", "45")
-
-#print(c._students[0]==c._students[1])
-
-c.load_data(*s1)
-c.load_data(*s2)
-c.load_data(*s3)
-c.load_data(*s4)
-
-#print(c.find("Kostysheno", "maks"))
