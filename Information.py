@@ -36,17 +36,6 @@ class Information:
         with open(output_file, "w", encoding=encoding) as output_path:
             self._output(output_path)
 
-    def _prekol(self):
-        for stud in self._students:
-
-            stud._skips.sort(key=lambda sorting: ("Lecture", "практ.", "8", "Лаб."))
-
-        for stud in self._students:
-            print(stud)
-
-    #def _output(self, output_path):
-    #    self._students.sort(key=lambda sorting: ())
-
 
 
 
@@ -76,7 +65,7 @@ class Information:
             student = self.add_student(sname, name, course, group)
 
         skip = student.load_skip(subject, day, pair, auditory, type, week)
-        #print(f"{self}")
+
         return skip
 
     def summing(self, skip):
@@ -90,7 +79,7 @@ class Information:
         skip = self.load_skip(subject, sname, day, pair, auditory,
             type, week, course, group, name)
         self.summing(skip)
-        self._prekol()
+
 
 
     def __str__(self):

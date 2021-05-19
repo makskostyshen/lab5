@@ -9,7 +9,6 @@ class Builder:
 
 
     def __init__(self, csv_object: csv.reader):
-
         self._object = csv_object
         self._current = None
 
@@ -24,9 +23,14 @@ class Builder:
         return 10
 
 
-    def load_data(self, holder: Information):
+    def load_data(self, holder: Information) -> None:
+        """
+        Upload the row
 
-        #print(type(self))
+        input:
+            holder - where to input
+        """
+
         for row in self._object:
             if row:
                 self.row_proceed(row)
@@ -37,17 +41,17 @@ class Builder:
 
 
     def row_proceed(self, row):
-
+        """
+        Check row's fields and prepare it to uploading
+        """
 
         if (len(row) != self.fields_number()):
             raise Exception
-            #                                        !!!!!!!!!!!!!!!!!!!!!!
-            print("ok")
+
         keys = ["subject", "sname", "day", "pair", "auditory", "type", "week", "course", "group", "name"]
         data = {keys[i] : row[i] for i in range(len(keys))}
         self._check_int(data)
         self._current = self._convert_row(data)
-        #print(self.current)
 
 
     def _check_int(self, data):
@@ -60,22 +64,16 @@ class Builder:
 
 
     def _convert_row(self, data):
+
+
         data["day"] = int(data["day"])
         data["pair"] = int(data["pair"])
         data["auditory"] = int(data["auditory"])
         data["week"] = int(data["week"])
         data["course"] = int(data["course"])
-        #print(data["course"])
-        #print(type(data["course"]))
         return data
 
 
     def __str__(self):
         return f"{self.current()}"
 
-
-#with open("infor.csv", encoding="utf-8") as file:
-#    r = csv.reader(file)
-#    info = Builder(r)
-#    holder = Information()
-#    info.load(holder)
