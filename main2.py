@@ -62,8 +62,9 @@ def process(sett_file: str) -> None:
     """
 
     parameters = sett_read(sett_file)
+    print(parameters)
 
-    load("infor.csv", "infor.json", "utf-8")
+    load(parameters['input']['csv'], parameters['input']['json'],  parameters['input']['encoding'])
 
 
 def load(csv_file, json_file, encoding) -> None:
@@ -198,6 +199,7 @@ def fit(holder: Information, settings: dict) -> bool:
         output:
             sign of the correspondence between files
     """
+
     print("json?=csv: ", end="")
     if holder.max_auditory == settings["max_auditory"] and holder.total_skips == settings["total_skips"]:
         print("OK")
