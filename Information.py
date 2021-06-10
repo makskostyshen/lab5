@@ -37,6 +37,32 @@ class Information:
             self._output(output_path)
 
 
+    def _output(self, file):
+        results = self.result_list()                            ##
+
+        for res in results:
+            file.write(f"pairs skipped: {res['skipped_p']}\tlectures skipped:{res['skipped_l']}"
+                       f"\t{res['stud'].sname}\t{res['stud'].name}\n")
+
+            for sk in res["skips"]:
+                file.write(f"\t{sk.subject}\t{sk.type}\t{res['stud'].get_count_of_skips_by_type(sk.type)}\n")
+
+
+    def result_list(self):
+        students = []
+        for student in self._students:
+
+            if (lecture_sk := student.lecture_skips) > 15:
+
+                obj = {
+                    "stud": student,
+                    "skipped_p": student.total_skips,
+                    "skipped_l": lecture_sk,
+                    "skips": student.get_all_skips()
+                }
+
+                students.append(obj)
+        return students
 
 
     def add_student(self, sname, name, course, group):

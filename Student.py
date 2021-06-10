@@ -23,6 +23,16 @@ class Student:
         self._lecture_skips = 0
         self._skips = []
 
+    def get_all_skips(self):
+        return self._skips
+
+    def get_count_of_skips_by_type(self, type):
+        res = 0
+        for subj in self._skips:
+            if subj.type == type:
+                res += 1
+        return res
+
     @property
     def sname(self):
         return self._sname
@@ -73,7 +83,7 @@ class Student:
 
     def load_skip(self, subject, day, pair, auditory, type, week):
         self._total_skips+=1
-        if(type == Student.lecture_name):
+        if(type == Student.lecture_name()):
             self._lecture_skips+=1
         skip = self.add_skip(subject, day, pair, auditory, type, week)
         return skip
@@ -86,21 +96,3 @@ class Student:
         #prosto shcob bachyty
     def __str__(self):
         return f"({self.sname}, {self._skips}, lec={self._lecture_skips}, total={self._total_skips})"
-
-
-#lis = ["ssmaks", "maks", "1", "krovi"]
-
-#s = Student(*lis)
-
-
-
-#print(s.sname)
-#
-#
-#for s in lis:
-#    if(s=="1"):
-#        break
-#        print(s)
-#        print(3)
-#    print(s)
-#    print(3)

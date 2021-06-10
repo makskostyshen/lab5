@@ -63,17 +63,22 @@ def process(sett_file: str) -> None:
 
     parameters = sett_read(sett_file)
 
+    info = load(parameters['input']['csv'], parameters['input']['json'], parameters['input']['encoding'])
 
-    load(parameters['input']['csv'], parameters['input']['json'],  parameters['input']['encoding'])
+    print(f"output {parameters['output']['fname']}:", end=" ")
+    info.output(parameters["output"]["fname"], parameters["output"]["encoding"])
+    print("OK")
 
 
-def load(csv_file, json_file, encoding) -> None:
+def load(csv_file, json_file, encoding) -> Information:
     """
     Upload input data
 
     input:
         csv_file - path to the main file
         json_file - path to the additional file
+    output:
+        object with data loaded
 
     """
     holder = Information()
@@ -85,7 +90,7 @@ def load(csv_file, json_file, encoding) -> None:
     if not sign:
         raise Exception
 
-
+    return holder
 
 def load_data(csv_file, holder, encoding) -> None:
     """
