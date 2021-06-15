@@ -6,6 +6,7 @@ import csv
 import json
 import re
 from Information import Information
+from Builder import Builder
 
 
 def pr_exec() -> None:
@@ -15,6 +16,7 @@ def pr_exec() -> None:
 
     print("Kostyshen Maksym, K12")
     print("80 variant")
+
 
 def pr_cond() -> None:
     """
@@ -34,7 +36,150 @@ def cmd_read() -> str:
     if (len(argv) != 2):
         sys.exit("***** program aborted *****")
     path = argv[1]
+
     return path
+
+
+def main():
+    pr_exec()
+    pr_cond()
+    print("*****")
+
+    sett_file = cmd_read()
+
+    try:
+        process(sett_file)
+    except Exception as e:
+        print("UPS", "***** program aborted *****", e, sep="\n")
+
+
+def process(sett_file: str) -> None:
+    """
+    Read file with settings and process data
+
+    input:
+        sett_file - path to the file with settings
+    """
+
+    parameters = sett_read(sett_file)
+
+    info = load(parameters['input']['csv'], parameters['input']['json'], parameters['input']['encoding'])
+
+    print(f"output {parameters['output']['fname']}:", end=" ")
+    info.output(parameters["output"]["fname"], parameters["output"]["encoding"])
+    print("OK")
+
+
+def load(csv_file, json_file, encoding) -> Information:
+    """
+    Upload input data
+
+    input:
+        csv_file - path to the main file
+        json_file - path to the additional file
+    output:
+        object with data loaded
+
+    """
+    holder = Information()
+
+    load_data(csv_file, holder, encoding)
+    settings = load_sett(json_file, encoding)
+    sign = fit(holder, settings)
+
+    if not sign:
+        raise Exception
+
+    return holder
+
+def load_data(csv_file, holder, encoding) -> None:
+    """
+    Upload information from the main file
+
+    input:
+        holder: object to upload information into
+        csv_file - path to the main file
+
+    """
+
+    name = _pathname(csv_file)
+    print(f"input-csv {name}: ", end="")
+
+    holder.clear()
+
+    with open(csv_file, encoding=encoding) as opened_file:
+        csv_format = csv.reader(opened_file)
+        builder = Builder(csv_format)
+        builder.load_data(holder)
+
+    print("OK")
+
+
+
+
+def load_sett(sett_file: str, encoding: str) -> dict:
+    """
+    Upload information from the additional file
+
+    input:
+        sett_file - path to the additional file
+        encoding - file's encoding
+    output:
+        parameters - additional file's capacity
+    """
+
+    name = _pathname(sett_file)
+    print(f"input-json {name}: ", end="")
+
+    with open (sett_file, "r", encoding=encoding) as f:
+        parameters = json.load(f)
+        dictionary = check_sett(parameters)
+        print("OK")
+        return dictionary
+
+
+def check_sett(param: dict) -> dict:
+    """
+    Check existent keys from the additional file
+    and return a changed dictionary
+    """
+
+    p1 = param["найбільший номер аудиторії"]
+    p2 = param["кількість записів у файлі"]
+
+    dictionary = {"max_auditory": p1, "total_skips": p2}
+    return dictionary
+
+
+def sett_read(sett_file: str) -> dict:
+    """
+    Open, read and analyse the settings' file.
+
+    input:
+        sett_file - setting file's path
+    output:
+        param - settings file's capacity.
+    """
+
+    name = _pathname(sett_file)
+    print(f"ini {name} : ", end="")
+
+    with open(sett_file, "r") as f:
+        param = json.load(f)
+        _check_sett(param)
+        print("OK")
+        return param
+
+
+def _pathname(path: str) -> str:
+    """
+    Single out file`s name from the path.
+    """
+
+    pattern = r"[^\\^\/]*\.[^.]*"
+    name = re.search(pattern, path).group()
+    return name
+
 
 def _check_sett(param: dict) -> None:
     """
@@ -48,163 +193,29 @@ def _check_sett(param: dict) -> None:
     p5 = param["output"]["encoding"]
 
 
-def _pathname(path: str) -> str:
+def fit(holder: Information, settings: dict) -> bool:
     """
-    Single out file`s name from the path.
-    """
+    Check the correspondence between main file and additional file
 
-    pattern = r"[^\\^\/]*\.[^.]*"
-    name = re.search(pattern, path).group()
-    return name
+        input:
+            holder - object with data from the main file
+            settings - object with data from the additional file
 
-
-def sett_read(path: str) -> dict:
-    """
-    Open, read and analyse the settings' file.
-
-    input:
-        path - file's path
-    output:
-        param - settings file's capacity.
+        output:
+            sign of the correspondence between files
     """
 
-    name = _pathname(path)
-    print(f"ini {name} : ", end="")
-
-    with open(path, "r") as f:
-        param = json.load(f)
-        _check_sett(param)
+    print("json?=csv: ", end="")
+    if holder.max_auditory == settings["max_auditory"] and holder.total_skips == settings["total_skips"]:
         print("OK")
-        return param
+        return True
+
+    else: return False
 
 
-def _row_check(row: str, pattern: list) -> None:
-    """
-    Check the correspondence between the row and the pattern.
-    """
-
-    limit = len(row)
-    for i in range(limit):
-        re.fullmatch(pattern[i], row[i]).group()
-
-def row_head_check(row: list) -> None:
-    """
-    Check the accuracy of headers' row.
-    """
-
-    head = ["предмет", "прізвище", "день тижня", "пара", "аудиторія", "вид занять",
-            "навчальний тиждень", "курс", "код групи", "ім'я"]
-    _row_check(row, head)
-
-
-def row_info_check(row: list) -> None:
-    """
-    Check the accuracy of information row.
-    """
-
-    week_pat = re.compile(r"([1][0-8])|[0-9]")  # тут питаннячко щодо коомпіляції і навіщо вона треба тут саме
-    auditory_pat = re.compile(r"\d+")               # типу функція буде викликатись багато разів.
-    day_pat = re.compile(r"[0-5]")              # Кожен раз буде наново компілюватись?
-    pair_course_pat = re.compile(r"[0-4]")
-    type_pat = re.compile(r"Lecture|практ.|8|Лаб.")
-    subject_pat = re.compile(r"\S[\d 'a-zA-Zа-яА-Я-`]{4,22}\S")
-    group_pat = re.compile(r"\S[\da-zA-Zа-яА-Я-`]{,2}\S")
-    names_pat = re.compile(r"\S[a-zA-Zа-яА-Я-`]{4,18}\S")
-
-    info = [subject_pat, names_pat, day_pat, pair_course_pat, auditory_pat,
-                type_pat, week_pat, pair_course_pat, group_pat, names_pat]
-
-    _row_check(row, info)
-
-
-
-def csv_read(path: str, encoding: str) -> Information:
-    """
-    Open, read and analyse the file with main information.
-    Return it structured
-
-    input:
-        path - path to the file
-        encoding - file's encoding
-    output:
-        infor - object with the main information got structured
-    """
-
-    name = _pathname(path)
-    print(f"input-csv {name} : ", end="")
-
-    with open (path, "r", encoding=encoding) as file:
-        r = csv.reader(file)
-        print(f"type ==== {type(r)}")
-        row_index = 0
-        for row in r:
-            if(row_index):
-                row_info_check(row)
-            else: row_head_check(row)
-            row_index += 1
-
-        print("OK")
-
-def _check_json(param: dict) -> None:
-    """
-    Check existent keys from the additional file.
-    """
-    p1 = param["найбільший номер аудиторії"]
-    p2 = param["кількість записів у файлі"]
-
-
-def json_read(path: str, encoding: str) -> dict:
-    """
-    Open, read and analyse the file with additional information.
-
-    input:
-        path - path to the file
-        encoding - file's encoding
-    output:
-        param - additional file's capacity
-    """
-
-    name = _pathname(path)
-    print(f"input-json {name} : ", end="")
-
-    with open (path, "r", encoding=encoding) as f:
-        param = json.load(f)
-        _check_json(param)
-        print("OK")
-        return param
-
-
-
-def main(): pass
-
-
-
-pr_exec()
-pr_cond()
-print("*****")
+main()
 
 
 
 
-def load(csv_file, json_file, encoding) -> Information:
-    print("ok")
-    # load csv
-    # load json
-    # check
-
-def process(sett_file): pass
-    #d
-
-
-
-
-path = cmd_read()
-
-try:
-
-    param = sett_read(path)
-    csv_read(param["input"]["csv"], param["input"]["encoding"])
-    json_read(param["input"]["json"], param["input"]["encoding"])
-except BaseException as e:
-    print("UPS", "***** program aborted *****", e, sep="\n")
 
