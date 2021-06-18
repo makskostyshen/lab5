@@ -52,6 +52,7 @@ class Builder:
         data = {keys[i] : row[i] for i in range(len(keys))}
         self._check_int(data)
         self._current = self._convert_row(data)
+        print(self)
 
 
     def _check_int(self, data):
@@ -62,9 +63,7 @@ class Builder:
         re.fullmatch(self._int_pattern, data["course"]).group()
 
 
-
     def _convert_row(self, data):
-
 
         data["day"] = int(data["day"])
         data["pair"] = int(data["pair"])
@@ -75,5 +74,5 @@ class Builder:
 
 
     def __str__(self):
-        return f"{self.current()}"
+        return (f"Builder object")
 

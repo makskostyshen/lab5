@@ -1,4 +1,14 @@
-"""created by Kostyshen Maksym"""
+"""
+
+This module contains class Student, which contains information about student:
+    name
+    surname
+    course
+    group
+    skips
+
+created by Kostyshen Maksym.
+"""
 
 from Skips import Skips
 import re
@@ -23,15 +33,6 @@ class Student:
         self._lecture_skips = 0
         self._skips = []
 
-    def get_all_skips(self):
-        return self._skips
-
-    def get_count_of_skips_by_type(self, type):
-        res = 0
-        for subj in self._skips:
-            if subj.type == type:
-                res += 1
-        return res
 
     @property
     def sname(self):
@@ -57,9 +58,37 @@ class Student:
     def lecture_skips(self):
         return self._lecture_skips
 
-    @staticmethod
-    def lecture_name():
-        return "Lecture"
+
+    def get_all_sorted_skips(self) -> list:
+        """
+        Return the list of students' skips sorted by type.
+        """
+
+        seminar_list = []
+        lecture_list = []
+        laboratory_list = []
+        practice_list = []
+
+        for skip in self._skips:
+            if (skip._type == Skips._seminar):
+                seminar_list.append(skip)
+            if (skip._type == Skips._lecture):
+                lecture_list.append(skip)
+            if (skip._type == Skips._laboratory):
+                laboratory_list.append(skip)
+            if (skip._type == Skips._practice):
+                practice_list.append(skip)
+
+        sorted = seminar_list + lecture_list + laboratory_list + practice_list
+        return sorted
+
+
+    def get_count_of_skips_by_type(self, type):
+        res = 0
+        for subj in self._skips:
+            if subj.type == type:
+                res += 1
+        return res
 
 
     def _check_data(self, sname, name, course, group):
@@ -74,25 +103,36 @@ class Student:
             raise Exception
 
 
-
     def add_skip(self, subject, day, pair, auditory, type, week):
-
         new = Skips(subject, day, pair, auditory, type, week)
         self._skips.append(new)
         return new
 
-    def load_skip(self, subject, day, pair, auditory, type, week):
+
+    def load_skip(self, subject, day, pair, auditory, type, week) -> Skips:
+        """
+        Load skips data to definite student.
+
+            input:
+                subject, day, pair, auditory, type, week - skips parameters.
+
+            output:
+                skip - Skips object with this data.
+        """
+
         self._total_skips+=1
-        if(type == Student.lecture_name()):
+        if(type == Skips._lecture):
             self._lecture_skips+=1
+
         skip = self.add_skip(subject, day, pair, auditory, type, week)
         return skip
+
 
     def __eq__(self, other):
         return ((other.sname == self.sname) & (other.name == self.name))
 
-    def __repr__(self):
-        return f"({self.sname}, {self._skips})"
-        #prosto shcob bachyty
+
     def __str__(self):
-        return f"({self.sname}, {self._skips}, lec={self._lecture_skips}, total={self._total_skips})"
+        return (f"student: sname = {self.sname}, name = {self.name},"
+               f"lecture skips = {self.lecture_skips},"
+               f"total skips = {self.total_skips}")

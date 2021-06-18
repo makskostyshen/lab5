@@ -1,4 +1,9 @@
-"""created by Kostyshen Maksym"""
+"""
+
+This module proceed the work:
+
+created by Kostyshen Maksym.
+"""
 
 from sys import argv
 import sys
@@ -55,10 +60,10 @@ def main():
 
 def process(sett_file: str) -> None:
     """
-    Read file with settings and process data
+    Read file with settings and process data.
 
     input:
-        sett_file - path to the file with settings
+        sett_file - path to the file with settings.
     """
 
     parameters = sett_read(sett_file)
@@ -72,13 +77,13 @@ def process(sett_file: str) -> None:
 
 def load(csv_file, json_file, encoding) -> Information:
     """
-    Upload input data
+    Upload input data.
 
     input:
-        csv_file - path to the main file
-        json_file - path to the additional file
+        csv_file - path to the main file.
+        json_file - path to the additional file.
     output:
-        object with data loaded
+        object with data loaded.
 
     """
     holder = Information()
@@ -92,13 +97,14 @@ def load(csv_file, json_file, encoding) -> Information:
 
     return holder
 
+
 def load_data(csv_file, holder, encoding) -> None:
     """
-    Upload information from the main file
+    Upload information from the main file.
 
     input:
-        holder: object to upload information into
-        csv_file - path to the main file
+        holder: object to upload information into.
+        csv_file - path to the main file.
 
     """
 
@@ -115,17 +121,15 @@ def load_data(csv_file, holder, encoding) -> None:
     print("OK")
 
 
-
-
 def load_sett(sett_file: str, encoding: str) -> dict:
     """
-    Upload information from the additional file
+    Upload information from the additional file.
 
     input:
-        sett_file - path to the additional file
-        encoding - file's encoding
+        sett_file - path to the additional file.
+        encoding - file's encoding.
     output:
-        parameters - additional file's capacity
+        parameters - additional file's capacity.
     """
 
     name = _pathname(sett_file)
@@ -141,7 +145,7 @@ def load_sett(sett_file: str, encoding: str) -> dict:
 def check_sett(param: dict) -> dict:
     """
     Check existent keys from the additional file
-    and return a changed dictionary
+    and return a changed dictionary.
     """
 
     p1 = param["найбільший номер аудиторії"]
@@ -156,7 +160,7 @@ def sett_read(sett_file: str) -> dict:
     Open, read and analyse the settings' file.
 
     input:
-        sett_file - setting file's path
+        sett_file - setting file's path.
     output:
         param - settings file's capacity.
     """
@@ -195,14 +199,14 @@ def _check_sett(param: dict) -> None:
 
 def fit(holder: Information, settings: dict) -> bool:
     """
-    Check the correspondence between main file and additional file
+    Check the correspondence between main file and additional file.
 
         input:
-            holder - object with data from the main file
-            settings - object with data from the additional file
+            holder - object with data from the main file.
+            settings - object with data from the additional file.
 
         output:
-            sign of the correspondence between files
+            sign of the correspondence between files.
     """
 
     print("json?=csv: ", end="")

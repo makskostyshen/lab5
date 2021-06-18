@@ -1,4 +1,9 @@
-"""created by Kostyshen Maksym"""
+"""
+
+This module contains class Information, which contains all data and knows how to output it:
+
+created by Kostyshen Maksym
+"""
 
 from Student import Student
 
@@ -37,7 +42,7 @@ class Information:
             self._output(output_path)
 
 
-    def _output(self, file):
+    def _output(self, file) -> None:
         results = self.result_list()                            ##
 
         for res in results:
@@ -48,7 +53,11 @@ class Information:
                 file.write(f"\t{sk.subject}\t{sk.type}\t{res['stud'].get_count_of_skips_by_type(sk.type)}\n")
 
 
-    def result_list(self):
+    def result_list(self) -> list:
+        """
+        Check students and return the list with needed information of students to output
+        """
+
         students = []
         for student in self._students:
 
@@ -58,7 +67,7 @@ class Information:
                     "stud": student,
                     "skipped_p": student.total_skips,
                     "skipped_l": lecture_sk,
-                    "skips": student.get_all_skips()
+                    "skips": student.get_all_sorted_skips()
                 }
 
                 students.append(obj)
@@ -84,6 +93,17 @@ class Information:
         
     def load_skip(self, subject, sname, day, pair, auditory,
             type, week, course, group, name):
+        """
+        Load all data.
+
+            input:
+                subject, sname, day, pair, auditory,
+                type, week, course, group, name - all data.
+
+            output:
+                skip - Skips object with required data.
+
+        """
 
         if (founded:=self.find(sname, name)):
             student = founded
@@ -91,10 +111,10 @@ class Information:
             student = self.add_student(sname, name, course, group)
 
         skip = student.load_skip(subject, day, pair, auditory, type, week)
-
         return skip
 
-    def summing(self, skip):
+
+    def _summing(self, skip):
         self._total_skips+=1
         if((checking:=skip.auditory) > self.max_auditory):
             self._max_auditory = checking
@@ -104,12 +124,12 @@ class Information:
             type, week, course, group, name):
         skip = self.load_skip(subject, sname, day, pair, auditory,
             type, week, course, group, name)
-        self.summing(skip)
-
+        self._summing(skip)
 
 
     def __str__(self):
-        return(f"maxau = {self._max_auditory}, total = {self._total_skips}, {self._students}")
+        return(f"Object with skips: total skips = {self.total_skips},"
+               f"max auditory = {self.max_auditory}")
 
 
 

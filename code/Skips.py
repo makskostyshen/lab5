@@ -1,4 +1,15 @@
-"""created by Kostyshen Maksym"""
+"""
+
+This module contains class Skips, which contains information about skip:
+    subject
+    day
+    pair
+    auditory
+    type
+    week
+
+created by Kostyshen Maksym.
+"""
 
 import re
 
@@ -25,6 +36,7 @@ class Skips:
         self._pair = pair
         self._auditory = auditory
 
+
     @property
     def subject(self):
         return self._subject
@@ -49,8 +61,9 @@ class Skips:
     def auditory(self):
         return self._auditory
 
+
     def _check_data(self, subject, day, pair, type, week):
-        print("checking")
+
         cond1 = re.fullmatch(self._subject_pattern, subject)
         cond2 = re.fullmatch(self._type_pattern, type)
         cond3 = self._low_limit <= day <= self._day_limit
@@ -61,5 +74,10 @@ class Skips:
             raise Exception
 
 
-    def __repr__(self): #shob bulo
-        return f"[{self._subject}, {self._type}]"
+    def __str__(self):
+        return (f"skip: subject = {self.subject}, type = {self.type}")
+
+
+
+
+
